@@ -1,0 +1,47 @@
+#SETUP
+
+git config --global user.name “[firstname lastname]” // is used to set your username for all repositories on your system that you use with Git. The [firstname lastname] part should be replaced with your actual first and last name. This information is used to identify the author of a commit.
+git config --global user.email “[valid-email]” // set an email address that will be associated with each history marker
+git config --global color.ui auto // set automatic command line coloring for Git for easy reviewing
+
+#SETUP & INIT
+
+git init // initialize an existing directory as a Git repository
+git clone [url] // retrieve an entire repository from a hosted location via URL
+
+#STAGE & SNAPSHOT
+
+git status // show modified files in working directory, staged for your next commit
+git add [file] // add a file as it looks now to your next commit (stage); can also use (git add * ; to commit everything)
+git reset [file] // unstage a file while retaining the changes in working directory
+git diff // diff of what is changed but not staged
+git diff --staged // diff of what is staged but not yet committed
+git commit -m “[descriptive message]” // commit your staged content as a new commit snapshot
+
+#BRANCH & MERGE
+
+git branch // list your branches. a * will appear next to the currently active branch
+git branch [branch-name] // create a new branch at the current commit
+git checkout // switch to another branch and check it out into your working directory
+git merge [branch] // merge the specified branch’s history into the current one
+git log // show all commits in the current branch’s history
+git branch -m <old-name> <new-name> // change previous branch name to new branch name
+
+    # How to rename a local Git Branch
+    git checkout old-name
+    You will get a confirmation that you have selected the correct branch. This will read “Switched to branch 'old-name'”
+    Now perform the actual rename for the local Git branch. The appropriate command for this is: “git branch -m new-name”
+
+    # Alternatively, you have the option to rename the Git branch via the master. To do this, use the following steps:
+    Switch to the master via the command “git checkout master”.
+    Now enter the following command if you want to rename a Git branch: “git branch -m old-name new-name”.
+    To ensure that the rename was successful, retrieve the current status of the branch using the “git branch -a” command.  
+
+    # How to rename a remote Git Branch
+    First, make sure the local branch has the correct, new name. The appropriate command is “git branch -a”.
+    Now delete the branch with the old, incorrect name from the remote repository. To do this, use the following command: “git push origin --delete old-name”.
+    Verify that the old branch has been deleted properly.
+    Now add the branch with the correct name. For this, use the command “git push origin -u new-name”.
+    Lastly, perform a reset of the upstream branch to ensure that the changes are effective.    
+
+
