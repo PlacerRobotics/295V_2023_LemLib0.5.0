@@ -27,6 +27,18 @@ git merge [branch] // merge the specified branch’s history into the current on
 git log // show all commits in the current branch’s history
 git branch -m <old-name> <new-name> // change previous branch name to new branch name
 
+git remote set-url origin <repo-url>                                                                                    
+git add *
+git commit -m "update"
+git branch -M "branch-name"
+git push origin "branch-name"
+
+press 'q' to exit out of git branch or smth that ends with "END"
+
+git config pull.rebase false  # merge
+hint:   git config pull.rebase true   # rebase
+hint:   git config pull.ff only       # fast-forward only
+
     # How to rename a local Git Branch
     git checkout old-name
     You will get a confirmation that you have selected the correct branch. This will read “Switched to branch 'old-name'”
@@ -42,6 +54,14 @@ git branch -m <old-name> <new-name> // change previous branch name to new branch
     Now delete the branch with the old, incorrect name from the remote repository. To do this, use the following command: “git push origin --delete old-name”.
     Verify that the old branch has been deleted properly.
     Now add the branch with the correct name. For this, use the command “git push origin -u new-name”.
-    Lastly, perform a reset of the upstream branch to ensure that the changes are effective.    
+    Lastly, perform a reset of the upstream branch to ensure that the changes are effective.   
+
+    # How to connect to a remote Git repository
+    git remote add origin REMOTE-URL
+    git remote -v
+    git push -u origin <branch>
+
+
+
 
 
