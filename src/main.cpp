@@ -27,18 +27,54 @@ pros::Imu imu(2);
 // Distance sensor
 pros::Distance cataDistance(11);
 
+// Wings Pnematics
+pros::ADIDigitalOut wing1('A');
+pros::ADIDigitalOut wing2('B');
+
+// Intake Pneumatics
+pros::ADIDigitalOut intakePiston1('C');
+pros::ADIDigitalOut intakePiston2('D');
+
+// Rotation Sensor
+pros::Rotation catapultRotation(10);
+
+// Catapult
+pros::Task loadCatapultTask{ [] {
+    while (pros::Task::notify_take(true, TIMEOUT_MAX)) {
+        const int pullbackAngle = 6000; 
+
+        // normal shot
+        catapultMotor.move_voltage(-12000); // 85
+        pros::delay(1000);
+
+        while(catapultRotation.get_angle() <= pullbackAngle){
+            pros::delay(20);
+            if(catapultRotation.get_angle() > pullbackAngle-1500){
+                catapultMotor.move_voltage(-9000);
+            }
+        }
+
+        catapultMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+
+        catapultMotor.move_voltage(0);
+
+        pros::delay(20);
+    }
+}
+};
+
 // tracking wheels
 // horizontal tracking wheel encoder. Rotation sensor, port 15, reversed (negative signs don't work due to a pros bug)
-pros::Rotation horizontalEnc(15, true);
+// pros::Rotation horizontalEnc(15, true);
 // horizontal tracking wheel. 2.75" diameter, 3.7" offset, back of the robot (negative)
-lemlib::TrackingWheel horizontal(&horizontalEnc, lemlib::Omniwheel::NEW_275, -3.7);
+// lemlib::TrackingWheel horizontal(&horizontalEnc, lemlib::Omniwheel::NEW_4, -3.7);
 
 // drivetrain settings
 lemlib::Drivetrain drivetrain(&leftMotors, // left motor group
                               &rightMotors, // right motor group
                               10, // 10 inch track width
-                              lemlib::Omniwheel::NEW_325, // using new 3.25" omnis
-                              360, // drivetrain rpm is 360
+                              lemlib::Omniwheel::NEW_4, // using new 4" omnis
+                              257.142857, // drivetrain rpm is 257.14
                               2 // chase power is 2. If we had traction wheels, it would have been 8
 );
 
@@ -70,7 +106,7 @@ lemlib::ControllerSettings angularController(2, // proportional gain (kP)
 // note that in this example we use internal motor encoders (IMEs), so we don't pass vertical tracking wheels
 lemlib::OdomSensors sensors(nullptr, // vertical tracking wheel 1, set to null
                             nullptr, // vertical tracking wheel 2, set to nullptr as we are using IMEs
-                            &horizontal, // horizontal tracking wheel 1
+                            nullptr, // horizontal tracking wheel 1, set to null for the time being
                             nullptr, // horizontal tracking wheel 2, set to nullptr as we don't have a second one
                             &imu // inertial sensor
 );
@@ -170,5 +206,33 @@ void opcontrol() {
         chassis.curvature(leftY, rightX);
         // delay to save resources
         pros::delay(10);
+        if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1))
+        {
+            intakeMotor.move_voltage(12000);
+        }
+        else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1))
+        {
+            intakeMotor.move_voltage(-12000);
+        }
+        else{
+            intakeMotor.move_voltage(0);
+        }
+       if(cataDistance.get() <= 50){
+        loadCatapultTask.notify();
+       } 
+       if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_A)){
+        wing1.set_value(1);
+        wing2.set_value(1);
+       } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_B)){
+        wing1.set_value(0);
+        wing2.set_value(0);
+       }
+       if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_X)){
+        intakePiston1.set_value(1);
+        intakePiston2.set_value(1);
+       } else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y)){
+        intakePiston1.set_value(0);
+        intakePiston2.set_value(0);
+       }
     }
 }

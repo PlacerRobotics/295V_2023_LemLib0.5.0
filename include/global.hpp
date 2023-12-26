@@ -17,3 +17,6 @@ extern pros::ADIDigitalOut wing2;
 // Intake pistons
 extern pros::ADIDigitalOut intakePiston1;
 extern pros::ADIDigitalOut intakePiston2;
+
+// Catapult rotation
+extern pros::Rotation catapultRotation;
