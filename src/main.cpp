@@ -22,7 +22,7 @@ pros::MotorGroup rightMotors({rF, rB1, rB2}); // right motor group
 pros::Motor_Group allMotors({lF,lB1, lB2, rF, rB1, rB2});
 
 // Inertial Sensor on port 2
-pros::Imu imu(2);
+pros::Imu imu(12);
 
 // Distance sensor
 pros::Distance cataDistance(11);
@@ -161,6 +161,11 @@ void competition_initialize() {}
 // get a path used for pure pursuit
 // this needs to be put outside a function
 ASSET(example_txt); // '.' replaced with "_" to make c++ happy
+ASSET(path1_txt);
+ASSET(path2_txt);
+ASSET(path3_txt);
+ASSET(path4_txt);
+ASSET(path5_txt);
 
 /**
  * Runs during auto
