@@ -82,10 +82,10 @@ pros::Task loadCatapultTask{ [] {
 // drivetrain settings
 lemlib::Drivetrain drivetrain(&leftMotors, // left motor group
                               &rightMotors, // right motor group
-                              10, // 10 inch track width
+                              15, // 10 inch track width
                               lemlib::Omniwheel::NEW_4, // using new 4" omnis
                               257.142857, // drivetrain rpm is 257.14
-                              2 // chase power is 2. If we had traction wheels, it would have been 8
+                              8 // chase power is 2. If we had traction wheels, it would have been 8
 );
 
 // lateral motion controller
@@ -98,7 +98,7 @@ lemlib::ControllerSettings linearController(20, // proportional gain (kP)
                                             3, // anti windup
                                             1, // small error range, in inches
                                             100, // small error range timeout, in milliseconds
-                                            3, // large error range, in inches
+                                            2, // large error range, in inches
                                             500, // large error range timeout, in milliseconds
                                             20 // maximum acceleration (slew)
 );
@@ -207,27 +207,27 @@ void autonomous() {
     // // wait until the movement is done
     // chassis.waitUntilDone();
     // pros::lcd::print(4, "pure pursuit finished!");
-    if (auton = 1){
+    if (auton == 1){
         // Point 1
         chassis.moveToPose(6, 42, 0, 2000);
         // Point 2
         chassis.turnTo(-16,0, 400);
-        chassis.moveToPose(-16, 0, 0, 1500);
-        // Point 3
-        chassis.turnTo(22, 12, 400);
-        chassis.moveToPose(22, 12, 0, 2000);
-        // Point 4
-        chassis.turnTo(-22, 0, 400);
-        chassis.moveToPose(-22, 0, 0, 1800);
-        // Point 5
-        chassis.turnTo(14, -24, 400);
-        chassis.moveToPose(14, -24, 0, 1500);
-        // Point 6
-        chassis.turnTo(-9, -31, 400);
-        chassis.moveToPose(-9, -31, 0, 1500);
-        // Point 7
-        chassis.turnTo(40, -5, 400);
-        chassis.moveToPose(40, -5, 0, 3000);
+        // chassis.moveToPose(-16, 0, 0, 1500);
+        // // Point 3
+        // chassis.turnTo(22, 12, 400);
+        // chassis.moveToPose(22, 12, 0, 2000);
+        // // Point 4
+        // chassis.turnTo(-22, 0, 400);
+        // chassis.moveToPose(-22, 0, 0, 1800);
+        // // Point 5
+        // chassis.turnTo(14, -24, 400);
+        // chassis.moveToPose(14, -24, 0, 1500);
+        // // Point 6
+        // chassis.turnTo(-9, -31, 400);
+        // chassis.moveToPose(-9, -31, 0, 1500);
+        // // Point 7
+        // chassis.turnTo(40, -5, 400);
+        // chassis.moveToPose(40, -5, 0, 3000);
         // chassis.waitUntilDone();
         // intakeMotor.move_voltage(-12000);
         // pros::delay(2000);
@@ -256,27 +256,43 @@ void autonomous() {
         // chassis.follow(path5_txt, 2000, 15);
         // intakeMotor.move_velocity(12000);
     }
-    if (auton = 2){
+    if (auton == 2){
         // Point 1
-        chassis.moveToPose(-6, 42, 0, 2000);
-        // Point 2
-        chassis.turnTo(16,0, 400);
-        chassis.moveToPose(16, 0, 0, 1500);
-        // Point 3
-        chassis.turnTo(-22, 12, 400);
-        chassis.moveToPose(-22, 12, 0, 2000);
-        // Point 4
-        chassis.turnTo(22, 0, 400);
-        chassis.moveToPose(22, 0, 0, 1800);
-        // Point 5
-        chassis.turnTo(-14, -24, 400);
-        chassis.moveToPose(-14, -24, 0, 1500);
-        // Point 6
-        chassis.turnTo(9, -31, 400);
-        chassis.moveToPose(9, -31, 0, 1500);
-        // Point 7
-        chassis.turnTo(-40, -5, 400);
-        chassis.moveToPose(-40, -5, 0, 3000);
+        // chassis.moveToPose(-6, 48, 0, 2500);
+        // // Point 2
+        // chassis.turnTo(13, 48, 1000);
+        // chassis.moveToPose(13, 48, 90, 2500);
+        // intakeMotor.move_voltage(12000);
+        // pros::delay(2000);
+        // intakeMotor.move_voltage(0);
+        // chassis.turnTo(-9, 60, 750);
+        // chassis.moveToPose(-9, 60, -60, 1500);
+        // intakeMotor.move_voltage(-12000);
+        // pros::delay(3000);
+        // intakeMotor.move_voltage(0);
+        // chassis.moveToPose(13, 54, 90, 3000);
+        // intakeMotor.move_voltage(12000);
+        // pros::delay(3000);
+        // intakeMotor.move_voltage(0);
+        chassis.follow(example_txt, 10, 3000);
+
+        // chassis.moveToPose(0, 48, 100, 1500);
+        // chassis.moveToPose(15, 48, 100, 2500);
+        // // Point 3
+        // chassis.turnTo(-12, 60, 400);
+        // chassis.moveToPose(-22, 12, 0, 2000);
+        // // Point 4
+        // chassis.turnTo(22, 0, 400);
+        // chassis.moveToPose(22, 0, 0, 1800);
+        // // Point 5
+        // chassis.turnTo(-14, -24, 400);
+        // chassis.moveToPose(-14, -24, 0, 1500);
+        // // Point 6
+        // chassis.turnTo(9, -31, 400);
+        // chassis.moveToPose(9, -31, 0, 1500);
+        // // Point 7
+        // chassis.turnTo(-40, -5, 400);
+        // chassis.moveToPose(-40, -5, 0, 3000);
     } 
 }
 
@@ -292,7 +308,7 @@ void opcontrol() {
         int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
         allMotors.set_brake_modes(pros::E_MOTOR_BRAKE_BRAKE);
         // move the chassis with curvature drive
-        chassis.curvature(leftY, rightX);
+        chassis.curvature(leftY, rightX, 0.3);
         // delay to save resources
         pros::delay(10);
         if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1))
