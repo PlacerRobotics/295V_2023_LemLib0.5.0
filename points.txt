@@ -1,0 +1,19 @@
+Auton 1(Left):
+Point 1: 0, 0
+Point 2: 6, 42 + 6
+Point 3: -10, 42 + 6
+Point 4: 12, 54 + 6
+Point 5: -10, 54 + 6
+Point 6: 4, 30 + 6
+Point 7: -5, -1 + 6
+Point 8: 35, -6 + 6
+
+Auton 2(Right):
+Point 1: 0, 0
+Point 2: -6, 42 + 6
+Point 3: 10, 42 + 6
+Point 4: -12, 54 + 6
+Point 5: 10, 54 + 6
+Point 6: -4, 30 + 6
+Point 7: 5, -1 + 6
+Point 8: -35, -6 + 6

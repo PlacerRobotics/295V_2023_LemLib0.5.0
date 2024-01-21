@@ -29,7 +29,7 @@ ASSET(path3_txt);
 ASSET(path4_txt);
 ASSET(path5_txt);
 
-int auton = 2;
+int auton = 1;
 
 // Inertial Sensor on port 2
 pros::Imu imu(12);
@@ -208,10 +208,11 @@ void autonomous() {
     // chassis.waitUntilDone();
     // pros::lcd::print(4, "pure pursuit finished!");
     if (auton == 1){
+        chassis.follow(path1_txt, 10, 5000);
         // Point 1
-        chassis.moveToPose(6, 42, 0, 2000);
-        // Point 2
-        chassis.turnTo(-16,0, 400);
+        // chassis.moveToPose(6, 42, 0, 2000);
+        // // Point 2
+        // chassis.turnTo(-16,0, 400);
         // chassis.moveToPose(-16, 0, 0, 1500);
         // // Point 3
         // chassis.turnTo(22, 12, 400);
@@ -259,22 +260,30 @@ void autonomous() {
     if (auton == 2){
         // Point 1
         // chassis.moveToPose(-6, 48, 0, 2500);
-        // // Point 2
+        chassis.moveToPose(-6, 48, 0, 2000);
+        // Point 2
         // chassis.turnTo(13, 48, 1000);
+        chassis.turnTo(5, 50, 500);
         // chassis.moveToPose(13, 48, 90, 2500);
-        // intakeMotor.move_voltage(12000);
-        // pros::delay(2000);
-        // intakeMotor.move_voltage(0);
-        // chassis.turnTo(-9, 60, 750);
-        // chassis.moveToPose(-9, 60, -60, 1500);
-        // intakeMotor.move_voltage(-12000);
-        // pros::delay(3000);
-        // intakeMotor.move_voltage(0);
-        // chassis.moveToPose(13, 54, 90, 3000);
-        // intakeMotor.move_voltage(12000);
-        // pros::delay(3000);
-        // intakeMotor.move_voltage(0);
-        chassis.follow(example_txt, 10, 3000);
+        chassis.moveToPose(5, 50, 90, 1500);
+        intakeMotor.move_voltage(12000);
+        pros::delay(2000);
+        intakeMotor.move_voltage(0);
+        chassis.turnTo(-14, 63, 300);
+        chassis.moveToPose(-14, 63, -60, 1000);
+        intakeMotor.move_voltage(-12000);
+        pros::delay(2000);
+        intakeMotor.move_voltage(0);
+        chassis.turnTo(5,62, 500);
+        chassis.moveToPose(5, 62, 90, 1500);
+        intakeMotor.move_voltage(12000);
+        pros::delay(1200);
+        intakeMotor.move_voltage(0);
+        chassis.turnTo(-2,0, 300);
+        chassis.moveToPose(-2, 0, 0, 3000);
+        chassis.turnTo(-35, 2, 500);
+        chassis.moveToPose(-35, 2, -90, 750);
+        // chassis.follow(path1_txt, 10, 3000);
 
         // chassis.moveToPose(0, 48, 100, 1500);
         // chassis.moveToPose(15, 48, 100, 2500);
