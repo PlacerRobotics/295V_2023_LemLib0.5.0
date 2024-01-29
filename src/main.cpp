@@ -1,25 +1,24 @@
 #include "main.h"
 #include "lemlib/api.hpp"
-// #include "global.hpp"
 
 // controller
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
 // drive motors
-pros::Motor lF(1, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor lB1(2, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor lB2(3, pros::E_MOTOR_GEARSET_06, false, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor rF(9, pros::E_MOTOR_GEARSET_06, false, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor rB1(5, pros::E_MOTOR_GEARSET_06, false, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor rB2(6, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor lF(1, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGREES); // left motor front
+pros::Motor lB1(2, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGREES); // left motor back bottom
+pros::Motor lB2(3, pros::E_MOTOR_GEARSET_06, false, pros::E_MOTOR_ENCODER_DEGREES); // left motor back top
+pros::Motor rF(9, pros::E_MOTOR_GEARSET_06, false, pros::E_MOTOR_ENCODER_DEGREES); // right motor front
+pros::Motor rB1(5, pros::E_MOTOR_GEARSET_06, false, pros::E_MOTOR_ENCODER_DEGREES); // right motor back bottom
+pros::Motor rB2(6, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGREES); // right motor back top
 
-pros::Motor catapultMotor(8, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor intakeMotor(7, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor catapultMotor(8, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGREES); // situated in the back of the robot
+pros::Motor intakeMotor(7, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGREES); // situated in the front of the robot
 
 // motor groups
 pros::MotorGroup leftMotors({lF, lB1, lB2}); // left motor group
 pros::MotorGroup rightMotors({rF, rB1, rB2}); // right motor group
-pros::Motor_Group allMotors({lF,lB1, lB2, rF, rB1, rB2});
+pros::Motor_Group allMotors({lF,lB1, lB2, rF, rB1, rB2}); // all the motors in one group for general 
 
 // Static files
 ASSET(example_txt); // '.' replaced with "_" to make c++ happy
@@ -29,29 +28,29 @@ ASSET(path3_txt);
 ASSET(path4_txt);
 ASSET(path5_txt);
 
-int auton = 1;
+int auton = 3;
 
-// Inertial Sensor on port 2
+// Inertial Sensor on port 12
 pros::Imu imu(12);
 
-// Distance sensor
+// Distance sensor for the catapult
 pros::Distance cataDistance(11);
 
 // Wings Pnematics
 pros::ADIDigitalOut wing1('A');
 pros::ADIDigitalOut wing2('B');
 
-// Intake Pneumatics
-pros::ADIDigitalOut intakePiston1('C');
-pros::ADIDigitalOut intakePiston2('D');
+// Blocker/Lift Pneumatics
+pros::ADIDigitalOut blockerPneumatics1('C');
+pros::ADIDigitalOut blockerPneumatics2('D');
 
-// Rotation Sensor
+// Rotation Sensor on the Catapult
 pros::Rotation catapultRotation(21);
 
-// Catapult
+// Catapult Task to make sure that the catapult goes and stay at the perfect angle 
 pros::Task loadCatapultTask{ [] {
     while (pros::Task::notify_take(true, TIMEOUT_MAX)) {
-        const int pullbackAngle = 5000; 
+        const int pullbackAngle = 5100; 
 
         // normal shot
         catapultMotor.move_voltage(-12000); // 85
@@ -180,102 +179,75 @@ void competition_initialize() {}
  * This is an example autonomous routine which demonstrates a lot of the features LemLib has to offer
  */
 void autonomous() {
-    // chassis.follow(example_txt, 4000, 15);
-    // example movement: Move to x: 20 and y: 15, and face heading 90. Timeout set to 4000 ms
-    // chassis.moveToPose(15, 50, -90, 4000);
-    // chassis.turnTo(-10, 50, 500);
-    // chassis.moveToPose(-30, 50, -90, 1500);
-    // chassis.moveToPose(0, 20, 90, 2000);
-    // chassis.moveToPose(0, 20, 90, 4000);
-    // example movement: Move to x: 0 and y: 0 and face heading 270, going backwards. Timeout set to 4000ms
-    // chassis.moveToPose(0, 0, 270, 4000, {.forwards = false});
-    // // cancel the movement after it has travelled 10 inches
-    // chassis.waitUntil(10);
-    // chassis.cancelMotion();
-    // // example movement: Turn to face the point x:45, y:-45. Timeout set to 1000
-    // // dont turn faster than 60 (out of a maximum of 127)
-    // chassis.turnTo(45, -45, 1000, true, 60);
-    // // example movement: Follow the path in path.txt. Lookahead at 15, Timeout set to 4000
-    // // following the path with the back of the robot (forwards = false)
-    // // see line 116 to see how to define a path
-    // chassis.follow(example_txt, 15, 4000, false);
-    // // wait until the chassis has travelled 10 inches. Otherwise the code directly after
-    // // the movement will run immediately
-    // // Unless its another movement, in which case it will wait
-    // chassis.waitUntil(10);
-    // pros::lcd::print(4, "Travelled 10 inches during pure pursuit!");
-    // // wait until the movement is done
-    // chassis.waitUntilDone();
-    // pros::lcd::print(4, "pure pursuit finished!");
     if (auton == 1){
-        chassis.follow(path1_txt, 10, 5000);
-        // Point 1
-        // chassis.moveToPose(6, 42, 0, 2000);
-        // // Point 2
-        // chassis.turnTo(-16,0, 400);
-        // chassis.moveToPose(-16, 0, 0, 1500);
-        // // Point 3
-        // chassis.turnTo(22, 12, 400);
-        // chassis.moveToPose(22, 12, 0, 2000);
-        // // Point 4
-        // chassis.turnTo(-22, 0, 400);
-        // chassis.moveToPose(-22, 0, 0, 1800);
-        // // Point 5
-        // chassis.turnTo(14, -24, 400);
-        // chassis.moveToPose(14, -24, 0, 1500);
-        // // Point 6
-        // chassis.turnTo(-9, -31, 400);
-        // chassis.moveToPose(-9, -31, 0, 1500);
-        // // Point 7
-        // chassis.turnTo(40, -5, 400);
-        // chassis.moveToPose(40, -5, 0, 3000);
-        // chassis.waitUntilDone();
-        // intakeMotor.move_voltage(-12000);
-        // pros::delay(2000);
-        // intakePiston1.set_value(1);
-        // intakePiston2.set_value(1);
-        // chassis.follow(path2_txt, 2000, 15);
+        chassis.setPose(34.951, -68.602, 0);
+        chassis.follow(path1_txt, 13, 1500, true, false);
+        intakeMotor.move_voltage(12000);
+        pros::delay(1000);
+        intakeMotor.move_voltage(0);
+        chassis.turnTo(-29.653, 68.602, 500);
+        chassis.follow(path2_txt, 10, 1500);
+        intakeMotor.move_voltage(-12000);
+        pros::delay(1750);
+        intakeMotor.move_voltage(0);
+        chassis.follow(path3_txt, 10, 2000, false);
+        wing1.set_value(1);
+        wing2.set_value(1);
+        // chassis.turnTo(11.161, 55.642, 750);
         // intakeMotor.move_voltage(12000);
-        // intakePiston1.set_value(0);
-        // intakePiston2.set_value(0);
-        // chassis.follow(path3_txt, 2000, 15);
-        // intakeMotor.move_voltage(-12000);
-        // intakePiston1.set_value(1);
-        // intakePiston2.set_value(1);
-        // // imu.set_heading(0);
-        // // while(imu.get_heading() <= 180){
-        // //     leftMotors.move_voltage(6000);
-        // //     rightMotors.move_voltage(-6000);
-        // // }
-        // chassis.turnTo(13.651257848803102, -0.6833656034310727, 500);
-        // intakePiston1.set_value(1);
-        // intakePiston2.set_value(1);
-        // chassis.follow(path4_txt, 2000, 15);
-        // intakePiston1.set_value(0);
-        // intakePiston2.set_value(0);
-        // intakeMotor.move_voltage(-12000);
-        // chassis.follow(path5_txt, 2000, 15);
-        // intakeMotor.move_velocity(12000);
     }
     if (auton == 2){
         // Point 1
         // chassis.moveToPose(-6, 48, 0, 2500);
-        chassis.moveToPose(-6, 48, 0, 2000);
+        chassis.moveToPose(-6, 48, 0, 1500);
         // Point 2
         // chassis.turnTo(13, 48, 1000);
-        chassis.turnTo(5, 50, 500);
+        // Trail 1
+        // chassis.turnTo(3, 50, 500);
+        chassis.turnTo(3, 48, 500);
         // chassis.moveToPose(13, 48, 90, 2500);
-        chassis.moveToPose(5, 50, 90, 1500);
+        // Trial 1
+        // chassis.moveToPose(3, 50, 90, 1500);
         intakeMotor.move_voltage(12000);
+        pros::delay(800);
+        intakeMotor.move_voltage(0);
+        chassis.turnTo(-10, 65, 750);
+        chassis.moveToPose(-10, 65, -60, 1500);
+        intakeMotor.move_voltage(-12000);
         pros::delay(2000);
+        intakeMotor.move_voltage(0);
+        chassis.turnTo(3,65, 750);
+        intakeMotor.move_voltage(12000);
+        pros::delay(1000);
+        intakeMotor.move_voltage(0);
+        // wing1.set_value(1);
+        // wing2.set_value(1);
+        chassis.turnTo(-14,65, 750);
+        // chassis.moveToPose(3, 65, -90, 1500);
+        // // intakeMotor.move_voltage(12000);
+        // // pros::delay(1200);
+        // // intakeMotor.move_voltage(0);
+        // chassis.turnTo(-2,0, 300);
+        // chassis.moveToPose(-2, 0, 0, 3000);
+        // chassis.turnTo(-35, 2, 500);
+        // chassis.moveToPose(-35, 2, -90, 750);
+
+        /*
+        // Point 1
+        chassis.moveToPose(-6, 48, 0, 2000);
+        // Point 2
+        chassis.turnTo(3, 50, 500);
+        chassis.moveToPose(3, 50, 90, 1500);
+        intakeMotor.move_voltage(12000);
+        pros::delay(1500);
         intakeMotor.move_voltage(0);
         chassis.turnTo(-14, 63, 300);
         chassis.moveToPose(-14, 63, -60, 1000);
         intakeMotor.move_voltage(-12000);
         pros::delay(2000);
         intakeMotor.move_voltage(0);
-        chassis.turnTo(5,62, 500);
-        chassis.moveToPose(5, 62, 90, 1500);
+        chassis.turnTo(3,62, 500);
+        chassis.moveToPose(3, 62, -90, 1500);
         intakeMotor.move_voltage(12000);
         pros::delay(1200);
         intakeMotor.move_voltage(0);
@@ -283,26 +255,18 @@ void autonomous() {
         chassis.moveToPose(-2, 0, 0, 3000);
         chassis.turnTo(-35, 2, 500);
         chassis.moveToPose(-35, 2, -90, 750);
-        // chassis.follow(path1_txt, 10, 3000);
-
-        // chassis.moveToPose(0, 48, 100, 1500);
-        // chassis.moveToPose(15, 48, 100, 2500);
-        // // Point 3
-        // chassis.turnTo(-12, 60, 400);
-        // chassis.moveToPose(-22, 12, 0, 2000);
-        // // Point 4
-        // chassis.turnTo(22, 0, 400);
-        // chassis.moveToPose(22, 0, 0, 1800);
-        // // Point 5
-        // chassis.turnTo(-14, -24, 400);
-        // chassis.moveToPose(-14, -24, 0, 1500);
-        // // Point 6
-        // chassis.turnTo(9, -31, 400);
-        // chassis.moveToPose(9, -31, 0, 1500);
-        // // Point 7
-        // chassis.turnTo(-40, -5, 400);
-        // chassis.moveToPose(-40, -5, 0, 3000);
-    } 
+        */
+    } if (auton == 3){
+        chassis.setPose(-35.684, -67.436, 0);
+        chassis.follow(path4_txt, 10, 2000, false, false);
+        catapultMotor.move_voltage(-12000);
+        pros::delay(4500);
+        catapultMotor.move_voltage(0);
+        chassis.waitUntilDone();
+        // chassis.follow(path5_txt, 10, 2000, false, false);
+        // wing1.set_value(1);
+        // wing2.set_value(1);
+    }
 }
 
 /**
@@ -341,12 +305,12 @@ void opcontrol() {
         wing1.set_value(0);
         wing2.set_value(0);
        }
-       if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_X)){
-        intakePiston1.set_value(1);
-        intakePiston2.set_value(1);
-       } else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y)){
-        intakePiston1.set_value(0);
-        intakePiston2.set_value(0);
-       }
+    //    if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_X)){
+    //     intakePiston1.set_value(1);
+    //     intakePiston2.set_value(1);
+    //    } else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y)){
+    //     intakePiston1.set_value(0);
+    //     intakePiston2.set_value(0);
+    //    }
     }
 }
