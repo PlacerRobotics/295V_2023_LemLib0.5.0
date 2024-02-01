@@ -27,7 +27,11 @@ ASSET(path2_txt);
 ASSET(path3_txt);
 ASSET(path4_txt);
 ASSET(path5_txt);
-
+ASSET(pathskills1_txt);
+ASSET(pathskills2_txt);
+ASSET(pathskills3_txt);
+ASSET(pathskills4_txt);
+ASSET(pathskills5_txt);
 int auton = 3;
 
 // Inertial Sensor on port 12
@@ -258,14 +262,22 @@ void autonomous() {
         */
     } if (auton == 3){
         chassis.setPose(-35.684, -67.436, 0);
-        chassis.follow(path4_txt, 10, 2000, false, false);
+        chassis.follow(pathskills1_txt, 10, 1500, true, false);
         catapultMotor.move_voltage(-12000);
-        pros::delay(4500);
+        pros::delay(40000);
         catapultMotor.move_voltage(0);
+        chassis.follow(pathskills4_txt, 15, 1500, false, false);
+        chassis.turnTo(0, -1, 600, false, 127.0F, false);
+        allMotors.move_voltage(-12000);
+        pros::delay(1300);
+        allMotors.move_voltage(0);
         chassis.waitUntilDone();
-        // chassis.follow(path5_txt, 10, 2000, false, false);
-        // wing1.set_value(1);
-        // wing2.set_value(1);
+        chassis.setPose(3.798, -0.3, 103.169);
+        wing1.set_value(1);
+        wing2.set_value(1);
+        chassis.follow(pathskills5_txt, 10, 1500, false, true);
+    } if(auton == 4){
+        
     }
 }
 
