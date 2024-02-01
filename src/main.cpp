@@ -32,6 +32,12 @@ ASSET(pathskills2_txt);
 ASSET(pathskills3_txt);
 ASSET(pathskills4_txt);
 ASSET(pathskills5_txt);
+ASSET(pathauton1_txt);
+ASSET(pathauton2_txt);
+ASSET(pathauton3_txt);
+ASSET(pathauton4_txt);
+ASSET(pathauton5_txt);
+
 int auton = 3;
 
 // Inertial Sensor on port 12
@@ -277,7 +283,37 @@ void autonomous() {
         wing2.set_value(1);
         chassis.follow(pathskills5_txt, 10, 1500, false, true);
     } if(auton == 4){
-        
+        chassis.setPose(-35.684, -67.436, 90);
+        chassis.follow(pathauton1_txt, 14, 1000, false, false);
+        wing1.set_value(1);
+        chassis.turnTo(59.439, -26.954, 750, false, 127.0F, true);
+        wing1.set_value(0);
+        chassis.follow(pathauton2_txt, 14, 1000, false);
+        chassis.follow(pathauton3_txt, 14, 2000);
+        pros::delay(1000);
+        intakeMotor.move_voltage(-12000); // -12000 is intake
+        pros::delay(1300);
+        intakeMotor.move_voltage(0);
+        chassis.turnTo(44.28, 0.2, 750, true, 127.0F, false);
+        intakeMotor.move_voltage(12000); // outtake is 12000
+        pros::delay(500);
+        intakeMotor.move_voltage(0);
+        chassis.turnTo(6.297, -2.799, 500);
+        chassis.follow(pathauton4_txt, 14, 1500);
+        pros::delay(500);
+        intakeMotor.move_voltage(-12000);
+        pros::delay(1300);
+        intakeMotor.move_voltage(0);
+        chassis.turnTo(44.28, 0.2, 750, true, 127.0F, false);
+        intakeMotor.move_voltage(12000);
+        pros::delay(500);
+        intakeMotor.move_voltage(0);
+        chassis.turnTo(44.28, 0.2, 750, false, 127.0F, false);
+        wing1.set_value(1);
+        wing2.set_value(1);
+        chassis.follow(pathauton5_txt, 14, 1000, false, false);
+        wing1.set_value(0);
+        wing2.set_value(0);
     }
 }
 
