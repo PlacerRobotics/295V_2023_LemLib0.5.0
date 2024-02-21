@@ -5,20 +5,20 @@
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
 // drive motors
-pros::Motor lF(1, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGREES); // left motor front
-pros::Motor lB1(2, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGREES); // left motor back bottom
-pros::Motor lB2(3, pros::E_MOTOR_GEARSET_06, false, pros::E_MOTOR_ENCODER_DEGREES); // left motor back top
-pros::Motor rF(9, pros::E_MOTOR_GEARSET_06, false, pros::E_MOTOR_ENCODER_DEGREES); // right motor front
-pros::Motor rB1(5, pros::E_MOTOR_GEARSET_06, false, pros::E_MOTOR_ENCODER_DEGREES); // right motor back bottom
-pros::Motor rB2(6, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGREES); // right motor back top
+pros::Motor lF(10, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGREES); // left motor front
+pros::Motor lM(9, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGREES); // left motor back bottom
+pros::Motor lB(8, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGREES); // left motor back top
+pros::Motor rF(20, pros::E_MOTOR_GEARSET_06, false, pros::E_MOTOR_ENCODER_DEGREES); // right motor front
+pros::Motor rM(19, pros::E_MOTOR_GEARSET_06, false, pros::E_MOTOR_ENCODER_DEGREES); // right motor back bottom
+pros::Motor rB(18, pros::E_MOTOR_GEARSET_06, false, pros::E_MOTOR_ENCODER_DEGREES); // right motor back top
 
-pros::Motor catapultMotor(8, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGREES); // situated in the back of the robot
-pros::Motor intakeMotor(7, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGREES); // situated in the front of the robot
+pros::Motor catapultMotor(5, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGREES); // situated in the back of the robot
+pros::Motor intakeMotor(12, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGREES); // situated in the front of the robot
 
 // motor groups
-pros::MotorGroup leftMotors({lF, lB1, lB2}); // left motor group
-pros::MotorGroup rightMotors({rF, rB1, rB2}); // right motor group
-pros::Motor_Group allMotors({lF,lB1, lB2, rF, rB1, rB2}); // all the motors in one group for general 
+pros::MotorGroup leftMotors({lF, lM, lB}); // left motor group
+pros::MotorGroup rightMotors({rF, rM, rB}); // right motor group
+pros::Motor_Group allMotors({lF, lM, lB, rF, rM, rB}); // all the motors in one group for general 
 
 // Static files
 ASSET(example_txt); // '.' replaced with "_" to make c++ happy
@@ -32,35 +32,49 @@ ASSET(pathskills2_txt);
 ASSET(pathskills3_txt);
 ASSET(pathskills4_txt);
 ASSET(pathskills5_txt);
+ASSET(pathskills6_txt);
 ASSET(pathauton1_txt);
 ASSET(pathauton2_txt);
 ASSET(pathauton3_txt);
 ASSET(pathauton4_txt);
 ASSET(pathauton5_txt);
+ASSET(pathcs1_txt);
+ASSET(pathcs2_txt);
+ASSET(pathcs3_txt);
+ASSET(pathcs4_txt);
 
-int auton = 3;
+// Skills paths
+ASSET(path_skills1_txt);
+ASSET(path_skills2_txt);
+ASSET(path_skills3_txt);
+ASSET(path_skills4_txt);
+ASSET(path_skills5_txt);
+ASSET(path_skills6_txt);
+ASSET(path_skills7_txt);
+
+int auton = 8;
 
 // Inertial Sensor on port 12
-pros::Imu imu(12);
+pros::Imu imu(11);
 
 // Distance sensor for the catapult
-pros::Distance cataDistance(11);
+pros::Distance cataDistance(3);
 
 // Wings Pnematics
-pros::ADIDigitalOut wing1('A');
-pros::ADIDigitalOut wing2('B');
+pros::ADIDigitalOut wingRight('A'); // right side wing
+pros::ADIDigitalOut wingLeft('B'); // left side wing
 
 // Blocker/Lift Pneumatics
 pros::ADIDigitalOut blockerPneumatics1('C');
 pros::ADIDigitalOut blockerPneumatics2('D');
 
 // Rotation Sensor on the Catapult
-pros::Rotation catapultRotation(21);
+pros::Rotation catapultRotation(14);
 
 // Catapult Task to make sure that the catapult goes and stay at the perfect angle 
 pros::Task loadCatapultTask{ [] {
     while (pros::Task::notify_take(true, TIMEOUT_MAX)) {
-        const int pullbackAngle = 5100; 
+        const int pullbackAngle = 7000; 
 
         // normal shot
         catapultMotor.move_voltage(-12000); // 85
@@ -68,8 +82,8 @@ pros::Task loadCatapultTask{ [] {
 
         while(catapultRotation.get_angle() <= pullbackAngle){
             pros::delay(10);
-            if(catapultRotation.get_angle() > pullbackAngle-1500){
-                catapultMotor.move_voltage(-9000);
+            if(catapultRotation.get_angle() > pullbackAngle-3000){
+                catapultMotor.move_voltage(-10000);
             }
         }
 
@@ -92,9 +106,9 @@ pros::Task loadCatapultTask{ [] {
 lemlib::Drivetrain drivetrain(&leftMotors, // left motor group
                               &rightMotors, // right motor group
                               15, // 10 inch track width
-                              lemlib::Omniwheel::NEW_4, // using new 4" omnis
-                              257.142857, // drivetrain rpm is 257.14
-                              8 // chase power is 2. If we had traction wheels, it would have been 8
+                              lemlib::Omniwheel::NEW_325, // using new 3.25" omnis
+                              450, // drivetrain rpm is 257.14
+                              8// chase power is 2. If we had traction wheels, it would have been 8
 );
 
 // lateral motion controller
@@ -102,21 +116,21 @@ lemlib::ControllerSettings linearController(20, // proportional gain (kP)
 
                                             0, // integral gain (kI)
 
-                                            40, // derivative gain (kD)
+                                            10, // derivative gain (kD)
 
-                                            3, // anti windup
+                                            2, // anti windup
                                             1, // small error range, in inches
                                             100, // small error range timeout, in milliseconds
                                             2, // large error range, in inches
                                             500, // large error range timeout, in milliseconds
-                                            20 // maximum acceleration (slew)
+                                            127 // maximum acceleration (slew)
 );
 
 // angular motion controller
-lemlib::ControllerSettings angularController(6, // proportional gain (kP)
+lemlib::ControllerSettings angularController(2, // proportional gain (kP)
                                              0, // integral gain (kI)
-                                             30, // derivative gain (kD)
-                                             3, // anti windup
+                                             10, // derivative gain (kD)
+                                             2, // anti windup
                                              1, // small error range, in degrees
                                              100, // small error range timeout, in milliseconds
                                              3, // large error range, in degrees
@@ -166,6 +180,7 @@ void initialize() {
             lemlib::telemetrySink()->info("Chassis pose: {}", chassis.getPose());
             // delay to save resources
             pros::delay(50);
+            pros::lcd::print(3, "Rotation: %d", catapultRotation.get_angle());
         }
     });
 }
@@ -189,6 +204,7 @@ void competition_initialize() {}
  * This is an example autonomous routine which demonstrates a lot of the features LemLib has to offer
  */
 void autonomous() {
+        allMotors.set_brake_modes(pros::E_MOTOR_BRAKE_BRAKE);
     if (auton == 1){
         chassis.setPose(34.951, -68.602, 0);
         chassis.follow(path1_txt, 13, 1500, true, false);
@@ -201,38 +217,38 @@ void autonomous() {
         pros::delay(1750);
         intakeMotor.move_voltage(0);
         chassis.follow(path3_txt, 10, 2000, false);
-        wing1.set_value(1);
-        wing2.set_value(1);
+        wingRight.set_value(1);
+        wingLeft.set_value(1);
         // chassis.turnTo(11.161, 55.642, 750);
         // intakeMotor.move_voltage(12000);
     }
     if (auton == 2){
         // Point 1
         // chassis.moveToPose(-6, 48, 0, 2500);
-        chassis.moveToPose(-6, 48, 0, 1500);
-        // Point 2
-        // chassis.turnTo(13, 48, 1000);
-        // Trail 1
-        // chassis.turnTo(3, 50, 500);
-        chassis.turnTo(3, 48, 500);
-        // chassis.moveToPose(13, 48, 90, 2500);
-        // Trial 1
-        // chassis.moveToPose(3, 50, 90, 1500);
-        intakeMotor.move_voltage(12000);
-        pros::delay(800);
-        intakeMotor.move_voltage(0);
-        chassis.turnTo(-10, 65, 750);
-        chassis.moveToPose(-10, 65, -60, 1500);
-        intakeMotor.move_voltage(-12000);
-        pros::delay(2000);
-        intakeMotor.move_voltage(0);
-        chassis.turnTo(3,65, 750);
-        intakeMotor.move_voltage(12000);
-        pros::delay(1000);
-        intakeMotor.move_voltage(0);
-        // wing1.set_value(1);
-        // wing2.set_value(1);
-        chassis.turnTo(-14,65, 750);
+        // chassis.moveToPose(-6, 48, 0, 1500);
+        // // Point 2
+        // // chassis.turnTo(13, 48, 1000);
+        // // Trail 1
+        // // chassis.turnTo(3, 50, 500);
+        // chassis.turnTo(3, 48, 500);
+        // // chassis.moveToPose(13, 48, 90, 2500);
+        // // Trial 1
+        // // chassis.moveToPose(3, 50, 90, 1500);
+        // intakeMotor.move_voltage(12000);
+        // pros::delay(800);
+        // intakeMotor.move_voltage(0);
+        // chassis.turnTo(-10, 65, 750);
+        // chassis.moveToPose(-10, 65, -60, 1500);
+        // intakeMotor.move_voltage(-12000);
+        // pros::delay(2000);
+        // intakeMotor.move_voltage(0);
+        // chassis.turnTo(3,65, 750);
+        // intakeMotor.move_voltage(12000);
+        // pros::delay(1000);
+        // intakeMotor.move_voltage(0);
+        // // wingRight.set_value(1);
+        // // wingLeft.set_value(1);
+        // chassis.turnTo(-14,65, 750);
         // chassis.moveToPose(3, 65, -90, 1500);
         // // intakeMotor.move_voltage(12000);
         // // pros::delay(1200);
@@ -242,14 +258,13 @@ void autonomous() {
         // chassis.turnTo(-35, 2, 500);
         // chassis.moveToPose(-35, 2, -90, 750);
 
-        /*
         // Point 1
         chassis.moveToPose(-6, 48, 0, 2000);
         // Point 2
         chassis.turnTo(3, 50, 500);
-        chassis.moveToPose(3, 50, 90, 1500);
+        chassis.moveToPose(3, 50, 90, 1200);
         intakeMotor.move_voltage(12000);
-        pros::delay(1500);
+        pros::delay(1800);
         intakeMotor.move_voltage(0);
         chassis.turnTo(-14, 63, 300);
         chassis.moveToPose(-14, 63, -60, 1000);
@@ -257,63 +272,208 @@ void autonomous() {
         pros::delay(2000);
         intakeMotor.move_voltage(0);
         chassis.turnTo(3,62, 500);
-        chassis.moveToPose(3, 62, -90, 1500);
+        chassis.moveToPose(3, 62, -90, 1300);
         intakeMotor.move_voltage(12000);
         pros::delay(1200);
         intakeMotor.move_voltage(0);
         chassis.turnTo(-2,0, 300);
         chassis.moveToPose(-2, 0, 0, 3000);
-        chassis.turnTo(-35, 2, 500);
-        chassis.moveToPose(-35, 2, -90, 750);
-        */
+        chassis.turnTo(-35, 0, 500);
+        chassis.moveToPose(-30, 0, -90, 750);
+
     } if (auton == 3){
+        // Prog Skills
         chassis.setPose(-35.684, -67.436, 0);
         chassis.follow(pathskills1_txt, 10, 1500, true, false);
         catapultMotor.move_voltage(-12000);
-        pros::delay(40000);
+        pros::delay(35000);
         catapultMotor.move_voltage(0);
-        chassis.follow(pathskills4_txt, 15, 1500, false, false);
-        chassis.turnTo(0, -1, 600, false, 127.0F, false);
+        chassis.follow(pathskills2_txt, 15, 1300, false, false);
+        chassis.turnTo(0, -11, 600, false, 127.0F, false);
         allMotors.move_voltage(-12000);
+        pros::delay(1700);
+        wingRight.set_value(1);
+        wingLeft.set_value(1);
+        pros::delay(500);
+        allMotors.move_voltage(0);
+        chassis.waitUntilDone();
+        allMotors.move_voltage(8000);
         pros::delay(1300);
         allMotors.move_voltage(0);
         chassis.waitUntilDone();
-        chassis.setPose(3.798, -0.3, 103.169);
-        wing1.set_value(1);
-        wing2.set_value(1);
-        chassis.follow(pathskills5_txt, 10, 1500, false, true);
+        chassis.setPose(3.798, -0.3, 103.169);       
+        chassis.follow(pathskills5_txt, 10, 1500, false, false);
+        chassis.setPose(45.696, -0.05, -90);
+        // chassis.moveToPose(30, -0.05, -90, 500, {}, false);
+        chassis.moveToPose(30, -0.05, -90, 500, {}, false);
+        chassis.moveToPose(45.696, -0.05, -90, 500, {.forwards = false}, false);
+        // wingRight.set_value(0);
+        // wingLeft.set_value(0);
+        // chassis.setPose(45.696, -0.05, -90);
+        // chassis.follow(pathskills6_txt, 14, 1500, true, false);
     } if(auton == 4){
-        chassis.setPose(-35.684, -67.436, 90);
-        chassis.follow(pathauton1_txt, 14, 1000, false, false);
-        wing1.set_value(1);
-        chassis.turnTo(59.439, -26.954, 750, false, 127.0F, true);
-        wing1.set_value(0);
-        chassis.follow(pathauton2_txt, 14, 1000, false);
-        chassis.follow(pathauton3_txt, 14, 2000);
-        pros::delay(1000);
-        intakeMotor.move_voltage(-12000); // -12000 is intake
-        pros::delay(1300);
+        chassis.setPose(35.784, -63.771, -180);
+        chassis.follow(pathauton1_txt, 14, 1500, false);
+        // chassis.turnTo(59.439, -26.954, 750, true, 127.0F, false);
+        chassis.waitUntilDone();
+        chassis.moveToPoint(61.105, -41.286, 500);
+        chassis.moveToPoint(61.105, -31.286, 600, false);
+        chassis.waitUntilDone();
+        chassis.follow(pathauton2_txt, 14, 1800);
+        intakeMotor.move_voltage(-12000); // intake
+        pros::delay(2200);
         intakeMotor.move_voltage(0);
-        chassis.turnTo(44.28, 0.2, 750, true, 127.0F, false);
-        intakeMotor.move_voltage(12000); // outtake is 12000
-        pros::delay(500);
-        intakeMotor.move_voltage(0);
-        chassis.turnTo(6.297, -2.799, 500);
-        chassis.follow(pathauton4_txt, 14, 1500);
-        pros::delay(500);
-        intakeMotor.move_voltage(-12000);
-        pros::delay(1300);
-        intakeMotor.move_voltage(0);
-        chassis.turnTo(44.28, 0.2, 750, true, 127.0F, false);
+        chassis.waitUntilDone();
+        chassis.turnTo(46, 0, 500, true);
         intakeMotor.move_voltage(12000);
-        pros::delay(500);
+        pros::delay(600);
         intakeMotor.move_voltage(0);
-        chassis.turnTo(44.28, 0.2, 750, false, 127.0F, false);
-        wing1.set_value(1);
-        wing2.set_value(1);
-        chassis.follow(pathauton5_txt, 14, 1000, false, false);
-        wing1.set_value(0);
-        wing2.set_value(0);
+        chassis.waitUntilDone();
+        chassis.follow(pathauton3_txt, 14, 2000);
+        intakeMotor.move_voltage(-12000);
+        pros::delay(2200);
+        intakeMotor.move_voltage(0);
+        chassis.waitUntilDone();
+        chassis.turnTo(46, 0, 500, true);
+        intakeMotor.move_voltage(12000); // -12000 is intake
+        pros::delay(750);
+        intakeMotor.move_voltage(0);
+        chassis.waitUntilDone();
+        chassis.turnTo(46, 0, 500, false);
+        chassis.waitUntilDone();
+        chassis.follow(pathauton4_txt, 14, 1500, false);
+        wingRight.set_value(1);
+        wingLeft.set_value(1);
+        // intakeMotor.move_voltage(-12000);
+        // pros::delay(1300);
+        // intakeMotor.move_voltage(0);
+        // chassis.turnTo(44.28, 0.2, 750, true, 127.0F, false);
+        // intakeMotor.move_voltage(12000);
+        // pros::delay(500);
+        // intakeMotor.move_voltage(0);
+        // chassis.turnTo(44.28, 0.2, 750, false, 127.0F, false);
+        // wingRight.set_value(1);
+        // wingLeft.set_value(1);
+        // chassis.follow(pathauton5_txt, 14, 1000, false, false);
+        // wingRight.set_value(0);
+        // wingLeft.set_value(0);
+    } if(auton == 5){
+        allMotors.move_voltage(-12000);
+        pros::delay(1000);
+        allMotors.move_voltage(0);
+    } if (auton == 6){
+        // Closeside auton
+        chassis.setPose(-40, -67.436, 0);
+        chassis.moveToPoint(-62, -47.278, 1500, true);
+        chassis.waitUntilDone();
+        chassis.moveToPoint(-40, -67.436, 1500, false);
+        wingLeft.set_value(1); // left side wing
+        // chassis.turnTo(-41.514, -62.105, 500, false, 127.0F);
+        chassis.waitUntilDone();
+        wingLeft.set_value(0);
+        // chassis.moveToPoint(-41.514, -62.771, 1000);
+        // chassis.follow(pathcs2_txt, 13, 1000, false);
+        // pros::delay(750);
+        // wingRight.set_value(0);
+        // chassis.waitUntilDone();
+        chassis.turnTo(-12, -67.436, 500, true);
+        chassis.moveToPose(-12, -67.436, 90, 1500);
+        // chassis.follow(pathcs3_txt, 13, 1500, true, false);
+    } if (auton == 7){
+        chassis.moveToPoint(0, 40, 700, true);
+    } if (auton == 8){
+        chassis.setPose(-35.517, -58.773, 0);
+        chassis.follow(path_skills1_txt, 14, 1500, true);
+        pros::delay(500);
+        loadCatapultTask.notify();
+        chassis.moveToPoint(-61.338, -40, 800, false);
+        chassis.moveToPoint(-61.338, -30.619, 800, true);
+        chassis.follow(path_skills2_txt, 13, 1500, false);
+        chassis.waitUntilDone();
+        catapultMotor.move_voltage(-12000);
+        pros::delay(40000);
+        loadCatapultTask.notify();
+        chassis.follow(path_skills3_txt, 14, 3000);
+        // chassis.turnTo(39.615, 59.839, 750, false);
+        chassis.follow(path_skills4_txt, 14, 2000);
+        chassis.waitUntilDone();
+        // chassis.setPose(44.946, 63.504, 45);
+        chassis.turnTo(58.773, 24.189, 750);
+        chassis.moveToPoint(58.773, 24.189, 1000);
+        chassis.waitUntilDone();
+        chassis.moveToPoint(58.773, 35, 1000, false);
+        chassis.moveToPoint(58.773, 24.189, 1000);
+        chassis.waitUntilDone();
+        chassis.moveToPoint(58.773, 35, 1000, false);
+        chassis.moveToPoint(58.773, 24.189, 1000);
+        chassis.moveToPoint(57.107, 35.184, 1000, false);
+        chassis.waitUntilDone();
+        chassis.turnTo(56.404, 36.505, 750);
+        chassis.waitUntilDone();
+        chassis.follow(path_skills5_txt, 14, 1300);
+        pros::delay(500);
+        wingLeft.set_value(1);
+        wingRight.set_value(1);
+        // chassis.waitUntilDone();
+        // chassis.follow(path_skills5_txt, 14, 1500);
+        // pros::delay(500);
+        // wingRight.set_value(1);
+        // pros::delay(700);
+        // wingRight.set_value(0);
+        // chassis.waitUntilDone();
+        // chassis.follow(path_skills6_txt, 14, 1200);
+        // chassis.moveToPoint(60.758, 20, 1000, false);
+        // chassis.moveToPoint(60.758, 30.103, 1000);
+        // chassis.moveToPoint(59.552, 34.324, 750, false);
+        // chassis.waitUntilDone();
+        // chassis.follow(path_skills7_txt, 14, 2000, false);
+        // pros::delay(1000);
+        // wingLeft.set_value(1);
+        // wingRight.set_value(1);
+        // chassis.waitUntilDone();
+        // chassis.moveToPoint(25, 4.777, 1000);
+        // chassis.moveToPoint(40.256, 4.777, 1000, false);
+         
+        // loadCatapultTask.notify();
+        // pros::delay(40000);
+        // chassis.follow(path_skills2_txt, 14, 4000, false);
+        // chassis.moveToPoint(50, -30.452, 1000, true);
+        // chassis.moveToPoint(60.208, -32.978, 1000, false);
+        // chassis.follow(path_skills3_txt, 14, 2000, false);
+        // chassis.turnTo(43.786, -9.23, 750, false);
+        // chassis.follow(path_skills4_txt, 14, 1500, false);
+        // chassis.moveToPoint(30, -9.23, 1000, true);
+        // chassis.moveToPoint(43.786, -9.23, 1000, false);
+        // chassis.follow(path_skills5_txt, 14, 1500, true);
+        // chassis.turnTo(43.786, 9.466, 750, false);
+        // chassis.follow(path_skills6_txt, 14, 1500, false);
+        // pros::delay(1500);
+        // wingRight.set_value(0);
+        // wingLeft.set_value(0);
+        // chassis.follow(path_skills7_txt, 14, 3000, false);
+        // pros::delay(1000);
+        // wingRight.set_value(1);
+        // wingLeft.set_value(1);
+        // pros::delay(1000);
+
+    } if(auton == 9){
+        allMotors.move_voltage(12000);
+        pros::delay(600);
+        allMotors.move_voltage(0);
+        pros::delay(100);
+        allMotors.move_voltage(-12000);
+        pros::delay(200);
+        allMotors.move_voltage(0);
+        pros::delay(100);
+        allMotors.move_voltage(12000);
+        pros::delay(400);
+        allMotors.move_voltage(0);
+        pros::delay(100);
+        allMotors.move_voltage(-12000);
+        pros::delay(200);
+        allMotors.move_voltage(0);
+
+
     }
 }
 
@@ -325,33 +485,35 @@ void opcontrol() {
     // loop to continuously update motors
     while (true) {
         // get joystick positions
+        // catapultRotation.set_reversed(0);
         int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
-        allMotors.set_brake_modes(pros::E_MOTOR_BRAKE_BRAKE);
         // move the chassis with curvature drive
-        chassis.curvature(leftY, rightX, 0.3);
+        chassis.curvature(leftY, rightX);
         // delay to save resources
         pros::delay(10);
         if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1))
         {
-            intakeMotor.move_voltage(12000);
+            intakeMotor.move_voltage(12000); // outake
         }
         else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1))
         {
-            intakeMotor.move_voltage(-12000);
+            intakeMotor.move_voltage(-12000); // intake
         }
         else{
             intakeMotor.move_voltage(0);
         }
-       if(cataDistance.get() <= 50){
+       if(cataDistance.get() <= 40){
         loadCatapultTask.notify();
        } 
        if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_A)){
-        wing1.set_value(1);
-        wing2.set_value(1);
+        wingRight.set_value(1);
+        wingLeft.set_value(1);
        } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_B)){
-        wing1.set_value(0);
-        wing2.set_value(0);
+        wingRight.set_value(0);
+        wingLeft.set_value(0);
+       } else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)){
+        loadCatapultTask.notify();
        }
     //    if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_X)){
     //     intakePiston1.set_value(1);
