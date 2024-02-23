@@ -1,37 +1,34 @@
--60.922, -27.287, 101.856
--59.721, -28.186, 99.968
--58.529, -29.096, 98.044
--57.348, -30.021, 96.082
--56.179, -30.962, 94.078
--55.026, -31.92, 92.031
--53.89, -32.9, 89.937
--52.776, -33.904, 87.794
--51.687, -34.936, 85.596
--50.635, -36.005, 83.341
--49.627, -37.115, 81.024
--48.682, -38.28, 78.638
--47.829, -39.513, 76.178
--47.13, -40.838, 73.638
--46.717, -42.274, 71.014
--46.857, -43.751, 68.31
--47.725, -44.952, 65.496
--49.012, -45.712, 62.532
--50.438, -46.168, 59.412
--51.913, -46.438, 56.116
--53.406, -46.578, 52.612
--54.905, -46.629, 48.858
--56.405, -46.611, 44.79
--57.903, -46.538, 40.313
--59.398, -46.419, 35.273
--60.89, -46.261, 29.38
--62.378, -46.068, 21.959
--63.861, -45.844, 10.061
--64.254, -45.779, 0
--64.254, -45.779, 0
--83.987, -42.524, 0
+-60.922, -27.287, 98.136
+-59.593, -27.983, 96.175
+-58.269, -28.688, 94.173
+-56.952, -29.406, 92.128
+-55.645, -30.142, 90.037
+-54.35, -30.899, 87.896
+-53.073, -31.686, 85.701
+-51.819, -32.509, 83.449
+-50.598, -33.38, 81.134
+-49.423, -34.312, 78.751
+-48.314, -35.321, 76.295
+-47.312, -36.436, 73.757
+-46.473, -37.677, 71.131
+-45.892, -39.056, 68.408
+-45.678, -40.535, 65.574
+-45.877, -42.017, 62.611
+-46.428, -43.41, 59.496
+-47.216, -44.684, 56.207
+-48.159, -45.849, 52.711
+-49.205, -46.923, 48.966
+-50.321, -47.925, 44.908
+-51.489, -48.866, 40.445
+-52.695, -49.759, 35.423
+-53.93, -50.61, 29.56
+-55.186, -51.428, 22.2
+-56.841, -52.443, 0
+-56.841, -52.443, 0
+-73.89, -62.898, 0
 endData
 127
 127
 200
--60.922, -27.287, -34.517, -46.778, -50.344, -48.111, -64.254, -45.779
-#PATH.JERRYIO-DATA {"appVersion":"0.5.1","format":"LemLib v0.4.x (inch, byte-voltage)","gc":{"robotWidth":15.5,"robotHeight":17.5,"robotIsHolonomic":false,"showRobot":true,"uol":2.54,"pointDensity":1.5,"controlMagnetDistance":1.968503937007874,"fieldImage":{"displayName":"VRC 2024 - Over Under","signature":"VRC 2024 - Over Under","origin":{"__type":"built-in"}}},"paths":[{"segments":[{"controls":[{"uid":"6mM6MRAXX2","x":-60.921989889705884,"y":-27.28745404411765,"lock":false,"visible":true,"heading":0,"__type":"end-point"},{"uid":"MwiU8RglDl","x":-34.517463235294116,"y":-46.778492647058826,"lock":false,"visible":true,"__type":"control"},{"uid":"CcDThQgODk","x":-50.34352022058823,"y":-48.11121323529412,"lock":false,"visible":true,"__type":"control"},{"uid":"Ep8gITJiRt","x":-64.25379136029412,"y":-45.778952205882355,"lock":false,"visible":true,"heading":0,"__type":"end-point"}],"speedProfiles":[],"lookaheadKeyframes":[],"uid":"CFGbTeGn8G"}],"pc":{"speedLimit":{"minLimit":{"value":0,"label":"0"},"maxLimit":{"value":127,"label":"127"},"step":1,"from":100,"to":127},"bentRateApplicableRange":{"minLimit":{"value":0,"label":"0"},"maxLimit":{"value":3,"label":"3"},"step":0.01,"from":1.05,"to":1.35},"maxDecelerationRate":127},"name":"Path","uid":"STWSyi0amp","lock":false,"visible":true}]}
+-60.922, -27.287, -46.179, -34.951, -37.516, -40.948, -56.841, -52.443
+#PATH.JERRYIO-DATA {"appVersion":"0.5.1","format":"LemLib v0.4.x (inch, byte-voltage)","gc":{"robotWidth":15.5,"robotHeight":17.5,"robotIsHolonomic":false,"showRobot":true,"uol":2.54,"pointDensity":1.5,"controlMagnetDistance":1.968503937007874,"fieldImage":{"displayName":"VRC 2024 - Over Under","signature":"VRC 2024 - Over Under","origin":{"__type":"built-in"}}},"paths":[{"segments":[{"controls":[{"uid":"6mM6MRAXX2","x":-60.921989889705884,"y":-27.28745404411765,"lock":false,"visible":true,"heading":0,"__type":"end-point"},{"uid":"MwiU8RglDl","x":-46.17876838235294,"y":-34.950597426470594,"lock":false,"visible":true,"__type":"control"},{"uid":"CcDThQgODk","x":-37.516084558823536,"y":-40.94784007352941,"lock":false,"visible":true,"__type":"control"},{"uid":"Ep8gITJiRt","x":-56.8405330882353,"y":-52.442555147058826,"lock":false,"visible":true,"heading":0,"__type":"end-point"}],"speedProfiles":[],"lookaheadKeyframes":[],"uid":"CFGbTeGn8G"}],"pc":{"speedLimit":{"minLimit":{"value":0,"label":"0"},"maxLimit":{"value":127,"label":"127"},"step":1,"from":100,"to":127},"bentRateApplicableRange":{"minLimit":{"value":0,"label":"0"},"maxLimit":{"value":3,"label":"3"},"step":0.01,"from":1.05,"to":1.35},"maxDecelerationRate":127},"name":"Path","uid":"STWSyi0amp","lock":false,"visible":true}]}
