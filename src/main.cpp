@@ -1,5 +1,6 @@
 #include "main.h"
 #include "lemlib/api.hpp"
+#include <newlib.h>
 
 // controller
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
@@ -13,7 +14,7 @@ pros::Motor rM(19, pros::E_MOTOR_GEARSET_06, false, pros::E_MOTOR_ENCODER_DEGREE
 pros::Motor rB(18, pros::E_MOTOR_GEARSET_06, false, pros::E_MOTOR_ENCODER_DEGREES); // right motor back top
 
 pros::Motor catapultMotor(5, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGREES); // situated in the back of the robot
-pros::Motor intakeMotor(12, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGREES); // situated in the front of the robot
+pros::Motor intakeMotor(17, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGREES); // situated in the front of the robot
 
 // motor groups
 pros::MotorGroup leftMotors({lF, lM, lB}); // left motor group
@@ -33,10 +34,13 @@ ASSET(path_skills9_txt);
 ASSET(cs1_txt);
 ASSET(cs2_txt);
 ASSET(cs3_txt);
-// ASSET(cs2_txt);
-// ASSET(cs2_txt);
-// ASSET(cs2_txt);
-int auton = 1;
+ASSET(fs1_txt);
+ASSET(fs2_txt);
+ASSET(fs3_txt);
+ASSET(fs4_txt);
+ASSET(fs5_txt);
+ASSET(fs6_txt);
+int auton = 4;
 
 // Inertial Sensor on port 12
 pros::Imu imu(11);
@@ -82,7 +86,7 @@ pros::Task loadCatapultTask{ [] {
 
 pros::Task elevationTask{ [] {
     while (pros::Task::notify_take(true, TIMEOUT_MAX)) {
-        const int pullbackAngle = 2700; 
+        const int pullbackAngle = 2500; 
 
         // normal shot
         catapultMotor.move_voltage(-12000); // 85
@@ -217,7 +221,7 @@ void autonomous() {
             // Auton skills
             chassis.setPose(-34.767, -66.936, 180);
             chassis.follow(path_skills1_txt, 14, 1500, false);
-            chassis.moveToPoint(-60.922, -38, 1000, true);
+            chassis.moveToPoint(-60.922, -38, 500, true);
             chassis.moveToPoint(-60.922, -27.287, 1000, false, 127.0F);
             chassis.follow(path_skills2_txt, 14, 1500, true);
             chassis.waitUntilDone();
@@ -227,16 +231,16 @@ void autonomous() {
             pros::delay(33000);
             allMotors.move_voltage(0);
             loadCatapultTask.notify();
-            chassis.moveToPoint(-33, -35, 700, false);
+            chassis.moveToPoint(-33, -35, 500, false);
             chassis.waitUntilDone();            
-            chassis.follow(path_skills3_txt, 14, 2500, false);
+            chassis.follow(path_skills3_txt, 14, 2200, false);
             pros::delay(700);
             wingLeft.set_value(1);
             pros::delay(700);
             wingLeft.set_value(0);
             chassis.waitUntilDone();
             chassis.moveToPoint(-10.862, 30, 800);
-            chassis.moveToPoint(-10.862, 39.682, 500, false);
+            chassis.moveToPoint(-10.862, 42, 1000, false);
             chassis.moveToPoint(-11, 30, 800);
             chassis.turnTo(-51, 46, 1200, false);
             chassis.follow(path_skills4_txt, 14, 1000, false);
@@ -244,7 +248,7 @@ void autonomous() {
             chassis.turnTo(-23.856, 64, 750, false);
             chassis.follow(path_skills5_txt, 14, 800, false);
             wingRight.set_value(1);
-            pros::delay(500);
+            pros::delay(300);
             wingRight.set_value(0);
             chassis.waitUntilDone();
             chassis.turnTo(46.945, 60.172, 400, false);
@@ -256,14 +260,15 @@ void autonomous() {
             pros::delay(200);
             wingRight.set_value(0);
             chassis.waitUntilDone();
-            chassis.moveToPoint(60, 38, 700);
-            chassis.moveToPoint(68, 25, 700, false);
+            chassis.moveToPoint(65, 38, 800, true);
             chassis.waitUntilDone();
-            chassis.moveToPoint(68, 38, 700);
-            chassis.moveToPoint(68, 25, 700, false);
+            chassis.moveToPoint(70, 25, 1000, false);
             chassis.waitUntilDone();
-            chassis.moveToPoint(68, 38, 700);
-            chassis.moveToPoint(68, 24.855, 700, false);
+            chassis.moveToPoint(65, 38, 800, true);
+            chassis.moveToPoint(70, 25, 1000, false);
+            chassis.waitUntilDone();
+            // chassis.moveToPoint(68, 38, 800);
+            // chassis.moveToPoint(68, 24.855, 1000, false);
             chassis.moveToPoint(60, 38, 1000);
             chassis.waitUntilDone();
             chassis.follow(path_skills8_txt, 14, 3000, true);
@@ -283,21 +288,27 @@ void autonomous() {
             // chassis.turnTo(48, -17, 1000, false);
             // wingLeft.set_value(1);
             // wingRight.set_value(1);
-            chassis.moveToPoint(48, -17, 1000, false); 
-            chassis.moveToPoint(37, -17, 1000);
-            chassis.moveToPoint(48, -17, 1000, false); 
+
+            // chassis.moveToPoint() 
+            chassis.turnTo(24, 0, 500);
+            chassis.moveToPoint(24, 0, 1000);
+            chassis.moveToPoint(48, 0, 1000, false);
+            chassis.turnTo(0, 0, 500);
+            chassis.moveToPoint(23, 0, 800);
+            chassis.moveToPoint(48, 0, 800, false);
+
         }
         if (auton == 2)
         {
             // Close Side Auton
-            chassis.setPose(-36.92, -64.393, 180);
-            chassis.follow(cs1_txt, 14, 1200, false);
+            chassis.setPose(-36.92, -64.393, 0);
+            chassis.follow(cs1_txt, 14, 1100, true);
             wingLeft.set_value(1);
             intakeMotor.move_voltage(-12000); // intake
-            pros::delay(300);
+            pros::delay(400);
             wingLeft.set_value(0);
             pros::delay(1200);
-            intakeMotor.move_voltage(0);
+            // intakeMotor.move_voltage(0);
             chassis.waitUntilDone();
             chassis.turnTo(-42.761, -55.88, 500, false);
             chassis.follow(cs2_txt, 14, 1000, false);
@@ -305,20 +316,86 @@ void autonomous() {
             chassis.turnTo(-59.869, -27.256, 700, false);
             chassis.follow(cs3_txt, 14, 1000, false);
             chassis.waitUntilDone();
-            chassis.moveToPoint(-59.869, -38, 700, true);
-            chassis.moveToPoint(-59.869, -26, 700, false);
-            chassis.moveToPoint(-62, -46, 1000, true);
-            chassis.turnTo(-48, -62, 700, true);
+            // In and out
+            chassis.moveToPoint(-62, -38, 700, true);
+            chassis.moveToPoint(-62, -24, 500, false);
+            chassis.moveToPoint(-62, -30, 700, true);
+            // Win Point Tribal
+            chassis.turnTo(-50, -59, 700, true);
+            chassis.moveToPoint(-50, -59, 1200, true);
             chassis.waitUntilDone();
             wingRight.set_value(1);
-            chassis.moveToPoint(-48, -62, 700, true);
+            chassis.turnTo(0, 0, 700, true);
+            chassis.turnTo(0, -60, 500, true);
+            // chassis.turnTo(0, -58, 1000, false);
+            // chassis.turnTo(0, -58, 500, false);
+            // chassis.turnTo(0, -59, 1000, true);
             chassis.waitUntilDone();
-            chassis.turnTo(0, -59, 500, true);
-            chassis.waitUntilDone();
+            chassis.moveToPoint(-16, -60, 1500, true);
+            pros::delay(300);
             wingRight.set_value(0);
-            chassis.moveToPoint(0, -59, 1000, true);
             pros::delay(300);
             intakeMotor.move_voltage(12000);
+
+        } if(auton == 3){
+            // Far Side Auton
+            chassis.setPose(35.685, -54.879, 0);
+            // chassis.moveToPoint(35.685, -40, 200);
+            // chassis.moveToPoint(35.685, -54.879, 200, false);
+            chassis.turnTo(58, -25, 200, true, 127, false);
+            intakeMotor.move_voltage(12000);
+            pros::delay(300);
+            // intakeMotor.move_voltage(0);
+            chassis.turnTo(31.178, -33.014, 300);
+            chassis.follow(fs1_txt, 14, 1200, true);
+            intakeMotor.move_voltage(-12000); // intake
+            // wingRight.set_value(1);
+            // pros::delay(300);
+            // wingRight.set_value(0);
+            pros::delay(1200);
+            chassis.follow(fs2_txt, 14, 1000, false);
+            chassis.turnTo(58, -25, 750, true, 127, false);
+            intakeMotor.move_voltage(12000); // outtake
+            pros::delay(500);
+            intakeMotor.move_voltage(0);
+            chassis.turnTo(24.001, -54.378, 800);
+            chassis.follow(fs3_txt, 14, 1200);
+            intakeMotor.move_voltage(-12000);
+            pros::delay(1300);
+            chassis.turnTo(18.603, -61.399, 1000);
+            chassis.follow(fs4_txt, 14, 1000);
+            chassis.turnTo(58, -25, 500);
+            intakeMotor.move_voltage(12000);
+            pros::delay(500);
+            intakeMotor.move(0);
+            chassis.turnTo(42.528, -54.044, 800, false); 
+            // chassis.moveToPose(52.709, -52.208, 220, 700, {.forwards = false});      
+            chassis.follow(fs5_txt, 14, 500, false);
+            wingLeft.set_value(1);
+            chassis.turnTo(0, 0, 700, false, 127, false);
+            wingLeft.set_value(0);
+            wingRight.set_value(1);
+            chassis.turnTo(61.722, -43.863, 700, false);
+            // chassis.moveToPoint(58.217, -46.7, 700);
+            chassis.follow(fs6_txt, 14, 800, false);
+            chassis.moveToPoint(60, -42, 1000, true, 127, false);
+            chassis.moveToPoint(66, -24, 700, false);
+            pros::delay(200);
+            wingRight.set_value(0);
+        }
+        if (auton == 4){
+            chassis.setPose(-36.92, -64.393, 0);
+            chassis.follow(cs1_txt, 14, 1100, true);
+            wingLeft.set_value(1);
+            intakeMotor.move_voltage(-12000); // intake
+            pros::delay(400);
+            wingLeft.set_value(0);
+            pros::delay(1200);
+            // intakeMotor.move_voltage(0);
+            chassis.waitUntilDone();
+            chassis.turnTo(-70, -9, 700);
+            wingLeft.set_value(1);
+            wingRight.set_value(1);
 
         }
         
@@ -350,7 +427,7 @@ void opcontrol() {
         else{
             intakeMotor.move_voltage(0);
         }
-       if(cataDistance.get() <= 40){
+       if(cataDistance.get() <= 30){
         loadCatapultTask.notify();
        } 
        if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_A)){
