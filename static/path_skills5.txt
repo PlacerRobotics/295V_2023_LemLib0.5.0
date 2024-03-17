@@ -1,45 +1,44 @@
--50.01, 47.511, 95.029
--49.682, 48.456, 93.683
--49.339, 49.395, 92.318
--48.976, 50.327, 90.932
--48.595, 51.252, 89.524
--48.189, 52.165, 88.094
--47.76, 53.069, 86.641
--47.304, 53.959, 85.162
--46.819, 54.833, 83.658
--46.301, 55.688, 82.126
--45.748, 56.521, 80.565
--45.156, 57.327, 78.973
--44.524, 58.102, 77.348
--43.849, 58.839, 75.689
--43.129, 59.534, 73.992
--42.364, 60.178, 72.256
--41.556, 60.766, 70.477
--40.708, 61.296, 68.652
--39.823, 61.761, 66.776
--38.908, 62.163, 64.847
--37.968, 62.505, 62.859
--37.009, 62.787, 60.805
--36.036, 63.018, 58.679
--35.054, 63.203, 56.474
--34.064, 63.347, 54.179
--33.07, 63.458, 51.781
--32.074, 63.541, 49.268
--31.076, 63.603, 46.619
--30.077, 63.648, 43.81
--29.077, 63.681, 40.809
--28.078, 63.706, 37.568
--27.078, 63.725, 34.02
--26.078, 63.744, 30.056
--25.078, 63.764, 25.482
--24.079, 63.788, 19.883
--23.079, 63.818, 11.889
--22.523, 63.837, 0
--22.523, 63.837, 0
--2.536, 64.549, 0
+-50.01, 47.511, 118.304
+-50.168, 48.499, 117.226
+-50.245, 49.495, 116.138
+-50.23, 50.495, 115.04
+-50.105, 51.486, 113.931
+-49.863, 52.456, 112.989
+-49.499, 53.386, 112.869
+-49.013, 54.26, 113.254
+-48.419, 55.063, 114.383
+-47.733, 55.79, 115.907
+-46.974, 56.441, 117.541
+-46.159, 57.019, 118.589
+-45.299, 57.529, 120.016
+-44.408, 57.982, 121.233
+-43.491, 58.38, 121.927
+-42.555, 58.734, 121.762
+-41.606, 59.048, 120.714
+-40.645, 59.325, 119.658
+-39.676, 59.572, 118.592
+-38.701, 59.792, 117.516
+-37.72, 59.988, 116.43
+-36.735, 60.162, 115.334
+-35.748, 60.316, 114.228
+-34.757, 60.454, 113.111
+-33.765, 60.576, 111.982
+-32.771, 60.685, 110.842
+-31.775, 60.782, 109.69
+-30.779, 60.867, 108.526
+-29.782, 60.943, 107.35
+-28.784, 61.011, 106.16
+-27.786, 61.071, 104.957
+-26.787, 61.126, 103.74
+-25.789, 61.174, 102.509
+-24.79, 61.219, 101.262
+-23.79, 61.26, 100
+-23.067, 61.288, 0
+-23.067, 61.288, 0
+-3.082, 62.071, 0
 endData
 127
 127
 200
--50.01, 47.511, -44.013, 65.337, -35.517, 63.338, -22.523, 63.837
-#PATH.JERRYIO-DATA {"appVersion":"0.5.1","format":"LemLib v0.4.x (inch, byte-voltage)","gc":{"robotWidth":15.5,"robotHeight":17.5,"robotIsHolonomic":false,"showRobot":true,"uol":2.54,"pointDensity":1,"controlMagnetDistance":1.968503937007874,"fieldImage":{"displayName":"VRC 2024 - Over Under","signature":"VRC 2024 - Over Under","origin":{"__type":"built-in"}}},"paths":[{"segments":[{"controls":[{"uid":"lBYqTSm8H2","x":-50.01034007352941,"y":47.51148897058823,"lock":false,"visible":true,"heading":0,"__type":"end-point"},{"uid":"7jF9FlKmyx","x":-44.01309742647059,"y":65.33662683823529,"lock":false,"visible":true,"__type":"control"},{"uid":"g1RWTTrAXc","x":-35.51700367647059,"y":63.337545955882355,"lock":false,"visible":true,"__type":"control"},{"uid":"KP2Ez1BsQD","x":-22.52297794117647,"y":63.83731617647059,"lock":false,"visible":true,"heading":0,"__type":"end-point"}],"speedProfiles":[],"lookaheadKeyframes":[],"uid":"hFIYfB4QIh"}],"pc":{"speedLimit":{"minLimit":{"value":0,"label":"0"},"maxLimit":{"value":127,"label":"127"},"step":1,"from":100,"to":127},"bentRateApplicableRange":{"minLimit":{"value":0,"label":"0"},"maxLimit":{"value":2,"label":"2"},"step":0.01,"from":0.7,"to":0.9},"maxDecelerationRate":127},"name":"Path","uid":"STWSyi0amp","lock":false,"visible":true}]}
+-50.01, 47.511, -52.442, 59.786, -36.061, 60.788, -23.067, 61.288
+#PATH.JERRYIO-DATA {"appVersion":"0.6.0","format":"LemLib v0.4.x (inch, byte-voltage)","gc":{"robotWidth":15.5,"robotHeight":17.5,"robotIsHolonomic":false,"showRobot":true,"uol":2.54,"pointDensity":1,"controlMagnetDistance":1.968503937007874,"fieldImage":{"displayName":"VRC 2024 - Over Under","signature":"VRC 2024 - Over Under","origin":{"__type":"built-in"}}},"paths":[{"segments":[{"controls":[{"uid":"lBYqTSm8H2","x":-50.01034007352941,"y":47.51148897058823,"lock":false,"visible":true,"heading":0,"__type":"end-point"},{"uid":"7jF9FlKmyx","x":-52.44208473251505,"y":59.7859794754516,"lock":false,"visible":true,"__type":"control"},{"uid":"g1RWTTrAXc","x":-36.060531496062964,"y":60.788369543191294,"lock":false,"visible":true,"__type":"control"},{"uid":"KP2Ez1BsQD","x":-23.066505760768873,"y":61.288139763779526,"lock":false,"visible":true,"heading":0,"__type":"end-point"}],"speedProfiles":[],"lookaheadKeyframes":[],"uid":"hFIYfB4QIh"}],"pc":{"speedLimit":{"minLimit":{"value":0,"label":"0"},"maxLimit":{"value":127,"label":"127"},"step":1,"from":100,"to":127},"bentRateApplicableRange":{"minLimit":{"value":0,"label":"0"},"maxLimit":{"value":1,"label":"1"},"step":0.001,"from":0,"to":0.1},"maxDecelerationRate":127},"name":"Path","uid":"STWSyi0amp","lock":false,"visible":true}]}
